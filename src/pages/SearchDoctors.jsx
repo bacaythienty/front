@@ -23,7 +23,7 @@ const SearchDoctors = () => {
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
-        const res = await fetch(`${API_URL}/specialties`);
+        const res = await fetch(`${VITE_API_URL}/specialties`);
         const data = await res.json();
         setSpecialties(data);
       } catch (err) {

@@ -30,18 +30,18 @@ const PatientHome = () => {
     const fetchData = async () => {
       try {
         // 1. Spécialités
-        const specRes = await fetch(`${API_URL}/specialties`);
+        const specRes = await fetch(`${VITE_API_URL}/specialties`);
         const specData = await specRes.json();
         setSpecialties(specData);
 
         // 2. Médecins populaires (ou juste les premiers)
-        const docRes = await fetch(`${API_URL}/users/doctors`);
+        const docRes = await fetch(`${VITE_API_URL}/users/doctors`);
         const docData = await docRes.json();
         setPopularDoctors(docData.slice(0, 3));
 
         // 3. Mes RDV à venir si connecté
         if (token && user?.role === 'patient') {
-          const appRes = await fetch(`${API_URL}/appointments/my`, {
+          const appRes = await fetch(`${VITE_API_URL}/appointments/my`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

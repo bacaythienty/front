@@ -34,7 +34,7 @@ const SpecialtyManagement = () => {
 
   const fetchSpecialties = async () => {
     try {
-      const res = await fetch(`${API_URL}/specialties`);
+      const res = await fetch(`${VAPI_URL}/specialties`);
       if (res.ok) {
         const data = await res.json();
         setSpecialties(data);

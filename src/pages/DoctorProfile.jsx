@@ -55,7 +55,7 @@ const DoctorProfile = () => {
       setLoadingSlots(true);
       setSelectedSlot('');
       try {
-        const res = await fetch(`${API_URL}/appointments/available-slots?doctorId=${id}&date=${selectedDate}`);
+        const res = await fetch(`${VITE_API_URL}/appointments/available-slots?doctorId=${id}&date=${selectedDate}`);
         if (res.ok) {
           const data = await res.json();
           setAvailableSlots(data);
