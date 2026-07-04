@@ -20,7 +20,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const url = new URL(`${VITE_API_URL}/users`);
+      const url = new URL(`${API_URL}/users`);
       if (search) url.searchParams.append('search', search);
       if (roleFilter) url.searchParams.append('role', roleFilter);
 

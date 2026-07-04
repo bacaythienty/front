@@ -25,7 +25,7 @@ const Register = () => {
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
-        const response = await fetch(`${VITE_API_URL}/specialties`);
+        const response = await fetch(`${API_URL}/specialties`);
         if (response.ok) {
           const data = await response.json();
           setSpecialties(data);

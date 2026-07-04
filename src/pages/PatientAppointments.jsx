@@ -21,7 +21,7 @@ const PatientAppointments = () => {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${VITE_API_URL}/appointments/my`, {
+      const res = await fetch(`${API_URL}/appointments/my`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

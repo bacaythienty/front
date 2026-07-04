@@ -97,7 +97,7 @@ const DoctorAvailability = () => {
     setSaving(true);
 
     try {
-      const res = await fetch(`${VITE_API_URL}/users/doctor/availability`, {
+      const res = await fetch(`${API_URL}/users/doctor/availability`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

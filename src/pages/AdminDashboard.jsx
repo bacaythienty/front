@@ -19,21 +19,21 @@ const AdminDashboard = () => {
     const fetchAdminData = async () => {
       try {
         // Users
-        const usersRes = await fetch(`${VITE_API_URL}/users`, {
+        const usersRes = await fetch(`${API_URL}/users`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const usersData = await usersRes.json();
         setUsers(usersData);
 
         // Appointments
-        const appRes = await fetch(`${VITE_API_URL}/appointments`, {
+        const appRes = await fetch(`${API_URL}/appointments`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const appData = await appRes.json();
         setAppointments(appData);
 
         // Specialties
-        const specRes = await fetch(`${VITE_API_URL}/specialties`);
+        const specRes = await fetch(`${API_URL}/specialties`);
         const specData = await specRes.json();
         setSpecialties(specData);
       } catch (err) {
