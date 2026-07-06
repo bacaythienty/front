@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
 
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = import.meta.env.API_URL + "/api";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
-          const response = await fetch(`${VITE_API_URL}/auth/profile`, {
+          const response = await fetch(`${API_URL}/auth/profile`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     if (!token) return;
     try {
-      const response = await fetch(`${VITE_API_URL}/auth/profile`, {
+      const response = await fetch(`${API_URL}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
