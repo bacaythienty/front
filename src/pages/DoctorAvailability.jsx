@@ -222,7 +222,7 @@ const DoctorAvailability = () => {
                 Sélectionnez les heures auxquelles les patients peuvent prendre rendez-vous pour ce jour de la semaine.
               </p>
               
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                 {defaultTimeSlots.map((slot) => {
                   const isSelected = currentDayConfig.slots.includes(slot);
                   return (

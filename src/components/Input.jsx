@@ -27,7 +27,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           required={required}
-          className={`px-3 py-2 text-sm rounded-lg border bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
+          className={`px-3 py-2 text-base md:text-sm rounded-lg border bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
             error
               ? 'border-red-300 focus:ring-red-500'
               : 'border-slate-300 focus:ring-medBlue-500 focus:border-medBlue-500'
@@ -43,7 +43,7 @@ const Input = ({
           value={value}
           onChange={onChange}
           required={required}
-          className={`px-3 py-2 text-sm rounded-lg border bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
+          className={`px-3 py-2 text-base md:text-sm rounded-lg border bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
             error
               ? 'border-red-300 focus:ring-red-500'
               : 'border-slate-300 focus:ring-medBlue-500 focus:border-medBlue-500'

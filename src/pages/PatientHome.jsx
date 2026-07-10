@@ -102,7 +102,7 @@ const PatientHome = () => {
                 placeholder="Médecin, spécialité, ville..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full text-slate-800 text-sm focus:outline-none placeholder:text-slate-400"
+                className="w-full text-slate-800 text-base md:text-sm focus:outline-none placeholder:text-slate-400"
               />
             </div>
             <Button type="submit" variant="primary">
