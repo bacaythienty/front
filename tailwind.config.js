@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+      },
       colors: {
         medBlue: {
           50: '#f0f7ff',

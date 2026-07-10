@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import Footer from './components/Footer';
 
 // Pages
 import Login from './pages/Login';
@@ -87,6 +88,7 @@ function App() {
               />
             </Routes>
           </main>
+          <Footer />
         </div>
       </AuthProvider>
     </Router>

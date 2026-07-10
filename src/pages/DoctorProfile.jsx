@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth, API_URL } from '../context/AuthContext';
-import { MapPin, Calendar, BookOpen, User, AlertCircle, MessageSquare } from 'lucide-react';
+import { MapPin, Calendar, BookOpen, User, AlertCircle, Sparkles, Star, Award, GraduationCap, CheckCircle2 } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -73,7 +73,6 @@ const DoctorProfile = () => {
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!token) {
-      // Rediriger vers la page de connexion s'il n'est pas connecté
       navigate('/login');
       return;
     }
@@ -129,8 +128,11 @@ const DoctorProfile = () => {
 
   if (loadingDoc) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-medBlue-600"></div>
+      <div className="flex items-center justify-center min-h-[70vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-medBlue-600"></div>
+          <p className="text-slate-400 text-xs font-medium">Chargement de la fiche médecin...</p>
+        </div>
       </div>
     );
   }
@@ -148,95 +150,119 @@ const DoctorProfile = () => {
     );
   }
 
-  // Date minimale de réservation : aujourd'hui
   const todayStr = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Profil Médecin */}
+    <div className="max-w-7xl mx-auto px-1 sm:px-4 py-8 space-y-8">
+      
+      {/* Grid Profil */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Infos Médecin (2/3) */}
+        {/* Infos Médecin (2/3 de l'écran) */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="text-left flex flex-col sm:flex-row gap-6 p-6">
+          
+          {/* Card Profil Principale */}
+          <div className="glass-effect rounded-3xl p-6 text-left flex flex-col sm:flex-row gap-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-medBlue-500/5 rounded-full blur-2xl" />
+            
             <img
               src={doctor.doctorProfile.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=250"}
               alt={doctor.name}
-              className="w-32 h-32 rounded-2xl object-cover border border-slate-100 shrink-0 self-start sm:self-center"
+              className="w-32 h-32 rounded-2xl object-cover border-2 border-slate-100/80 shadow-md shrink-0 self-start sm:self-center"
             />
-            <div className="space-y-3">
+            
+            <div className="space-y-4 z-10">
               <div className="space-y-1">
-                <h1 className="text-2xl font-extrabold text-slate-800 m-0 leading-tight">{doctor.name}</h1>
-                <p className="text-sm font-bold text-medBlue-600 uppercase tracking-wide">
-                  {doctor.doctorProfile?.specialty?.name || 'Généraliste'}
+                <h1 className="text-2xl sm:text-3xl font-extrabold font-outfit text-slate-900 leading-tight flex items-center gap-2">
+                  {doctor.name}
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-50 shrink-0" />
+                </h1>
+                <p className="text-xs font-bold text-medBlue-600 uppercase tracking-widest">
+                  {doctor.doctorProfile?.specialty?.name || 'Médecin Généraliste'}
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600 bg-slate-50 p-2.5 rounded-xl self-start">
-                <span>⭐ 4.9 (104 avis)</span>
-                <span>•</span>
-                <span>💼 {doctor.doctorProfile.experience} ans d'expérience</span>
-                <span>•</span>
-                <span>💶 {doctor.doctorProfile.fees} FCFA / consultation</span>
+              {/* Badges de stats premium */}
+              <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100/50">
+                <span className="flex items-center gap-0.5 text-amber-500">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400 shrink-0" /> 
+                  4.9
+                </span>
+                <span className="text-slate-300">•</span>
+                <span className="flex items-center gap-1">
+                  <Award className="w-3.5 h-3.5 text-medBlue-500 shrink-0" />
+                  {doctor.doctorProfile.experience} ans d'expérience
+                </span>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-800">
+                  {doctor.doctorProfile.fees ? `${doctor.doctorProfile.fees.toLocaleString('fr-FR')} FCFA` : 'Non spécifié'}
+                </span>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                <MapPin size={14} className="text-slate-400 shrink-0" />
-                <span>{doctor.doctorProfile.address || 'Non renseigné'}</span>
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <MapPin size={13} className="text-slate-400 shrink-0" />
+                <span className="font-medium">{doctor.doctorProfile.address || 'Sénégal'}</span>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Biographie & Formation */}
-          <Card className="text-left space-y-5 p-6">
+          <div className="glass-effect rounded-3xl p-6 text-left space-y-6">
             {doctor.doctorProfile.biography && (
               <div className="space-y-2">
-                <h3 className="font-bold text-base text-slate-800 flex items-center gap-1.5">
-                  <User size={18} className="text-medBlue-600" /> Biographie
+                <h3 className="font-bold font-outfit text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-50">
+                  <User size={16} className="text-medBlue-600 shrink-0" /> 
+                  Biographie & Présentation
                 </h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{doctor.doctorProfile.biography}</p>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">{doctor.doctorProfile.biography}</p>
               </div>
             )}
 
             {doctor.doctorProfile.education && (
-              <div className="space-y-2 border-t border-slate-100 pt-5">
-                <h3 className="font-bold text-base text-slate-800 flex items-center gap-1.5">
-                  <BookOpen size={18} className="text-medBlue-600" /> Formation & Études
+              <div className="space-y-2 pt-2">
+                <h3 className="font-bold font-outfit text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-50">
+                  <GraduationCap size={18} className="text-medBlue-600 shrink-0" /> 
+                  Formation & Cursus académique
                 </h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{doctor.doctorProfile.education}</p>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">{doctor.doctorProfile.education}</p>
               </div>
             )}
-          </Card>
+          </div>
         </div>
 
-        {/* Réservation (1/3) */}
+        {/* Formulaire de réservation (1/3 de l'écran) */}
         <div className="lg:col-span-1">
-          <Card className="text-left sticky top-20 shadow-lg p-6">
-            <h3 className="font-bold text-base text-slate-800 mb-4 flex items-center gap-1.5">
-              <Calendar size={18} className="text-medBlue-600" />
+          <div className="glass-effect rounded-3xl p-6 text-left sticky top-20 shadow-xl shadow-slate-100/50">
+            <h3 className="font-bold font-outfit text-sm text-slate-800 mb-4 flex items-center gap-2 pb-3 border-b border-slate-50 uppercase tracking-wider">
+              <Calendar size={16} className="text-medBlue-600 shrink-0" />
               Prendre rendez-vous
             </h3>
 
             {success ? (
-              <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl p-4 text-center space-y-4">
-                <p className="text-sm font-medium">{success}</p>
-                <Button variant="primary" size="sm" onClick={() => navigate('/appointments')} className="w-full">
+              <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-2xl p-4 text-center space-y-4 shadow-xs">
+                <p className="text-xs font-semibold leading-relaxed">{success}</p>
+                <Button 
+                  variant="primary" 
+                  size="sm" 
+                  onClick={() => navigate('/appointments')} 
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs border-none"
+                >
                   Voir mes rendez-vous
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleBooking} className="space-y-5">
                 {error && (
-                  <div className="bg-red-50 border border-red-100 rounded-lg p-3 flex items-start gap-2 text-red-700 text-sm">
-                    <AlertCircle className="shrink-0 mt-0.5" size={16} />
-                    <span>{error}</span>
+                  <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-start gap-2 text-red-700 text-xs">
+                    <AlertCircle className="shrink-0 mt-0.5" size={15} />
+                    <span className="font-medium leading-normal">{error}</span>
                   </div>
                 )}
 
                 {/* Étape 1 : Choisir Date */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="booking-date" className="text-sm font-semibold text-slate-700">
-                    Saisir une date
+                  <label htmlFor="booking-date" className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    1. Choisir une date
                   </label>
                   <input
                     type="date"
@@ -244,7 +270,7 @@ const DoctorProfile = () => {
                     min={todayStr}
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medBlue-500 focus:border-transparent"
+                    className="px-3.5 py-3 text-xs rounded-xl border border-slate-200 bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-medBlue-500 font-medium text-slate-700"
                     required
                   />
                 </div>
@@ -252,27 +278,27 @@ const DoctorProfile = () => {
                 {/* Étape 2 : Choisir Créneau */}
                 {selectedDate && (
                   <div className="space-y-2.5">
-                    <label className="text-sm font-semibold text-slate-700 block">
-                      Créneaux horaires disponibles
+                    <label className="text-xs font-bold text-slate-700 block uppercase tracking-wider">
+                      2. Choisir un créneau horaire
                     </label>
 
                     {loadingSlots ? (
-                      <div className="text-xs text-slate-400 py-4 text-center">Recherche des créneaux...</div>
+                      <div className="text-xs text-slate-400 py-4 text-center font-medium">Recherche des créneaux...</div>
                     ) : availableSlots.length === 0 ? (
-                      <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 text-center text-xs text-slate-400 font-medium">
+                      <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-100 text-center text-xs text-slate-400 font-bold">
                         Aucun créneau libre pour ce jour.
                       </div>
                     ) : (
-                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                      <div className="grid grid-cols-3 gap-2">
                         {availableSlots.map((slot) => (
                           <button
                             key={slot}
                             type="button"
                             onClick={() => setSelectedSlot(slot)}
-                            className={`py-1.5 text-xs rounded-lg border font-semibold transition-all ${
+                            className={`py-2 text-xs rounded-xl border font-bold transition-all ${
                               selectedSlot === slot
-                                ? 'bg-medBlue-600 border-medBlue-600 text-white'
-                                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                                ? 'bg-medBlue-600 border-medBlue-600 text-white shadow-md shadow-medBlue-100'
+                                : 'bg-white border-slate-150 text-slate-700 hover:bg-slate-50'
                             }`}
                           >
                             {slot}
@@ -287,12 +313,13 @@ const DoctorProfile = () => {
                 {selectedSlot && (
                   <div className="relative">
                     <Input
-                      label="Notes / Motif de consultation"
+                      label="3. Motif de la consultation"
                       id="notes"
                       type="textarea"
-                      placeholder="Indiquez brièvement le motif du rendez-vous..."
+                      placeholder="Ex: Consultation de contrôle, certificat médical..."
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
+                      className="rounded-xl"
                     />
                   </div>
                 )}
@@ -301,7 +328,7 @@ const DoctorProfile = () => {
                 <Button
                   type="submit"
                   variant="primary"
-                  className="w-full text-center"
+                  className="w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs border-none shadow-md"
                   disabled={booking || (selectedDate && !selectedSlot)}
                 >
                   {!token
@@ -312,7 +339,7 @@ const DoctorProfile = () => {
                 </Button>
               </form>
             )}
-          </Card>
+          </div>
         </div>
 
       </div>

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, API_URL } from '../context/AuthContext';
-import { Calendar, User, Clock, AlertCircle, FileText, CheckCircle, XCircle, MapPin, DollarSign, Award, BookOpen } from 'lucide-react';
+import { 
+  Calendar, User, Clock, AlertCircle, FileText, CheckCircle, 
+  XCircle, MapPin, DollarSign, Award, BookOpen, Sparkles, CheckCircle2 
+} from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
@@ -111,7 +114,6 @@ const DoctorDashboard = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Limiter la taille de l'image (max 2Mo pour le stockage MongoDB en Base64)
       if (file.size > 2 * 1024 * 1024) {
         setProfileError("La photo de profil est trop volumineuse (max. 2 Mo)");
         return;
@@ -174,125 +176,141 @@ const DoctorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-medBlue-600"></div>
+      <div className="flex items-center justify-center min-h-[70vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-medBlue-600"></div>
+          <p className="text-slate-400 text-xs font-medium">Chargement de votre espace médecin...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-left">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-extrabold text-slate-800 m-0">Bonjour, {user?.name}</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Spécialité : <span className="font-bold text-medBlue-600">{user?.doctorProfile?.specialty?.name || 'Généraliste'}</span>
-        </p>
+    <div className="max-w-7xl mx-auto px-1 sm:px-4 py-8 space-y-8 text-left">
+      
+      {/* En-tête de page */}
+      <div className="flex justify-between items-end pb-4 border-b border-slate-100">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-extrabold font-outfit text-slate-900 tracking-tight">Espace Médecin</h1>
+          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5 mt-1">
+            Spécialité : <span className="text-medBlue-600 font-bold">{user?.doctorProfile?.specialty?.name || 'Généraliste'}</span>
+          </p>
+        </div>
+        <div className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100/50">
+          <Sparkles size={12} className="text-medBlue-500" />
+          <span>Tableau de bord sécurisé</span>
+        </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-slate-100 gap-6">
+      {/* Onglets de navigation */}
+      <div className="flex border-b border-slate-100/80 gap-6">
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
+          className={`pb-3.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'appointments'
               ? 'border-medBlue-600 text-medBlue-700'
               : 'border-transparent text-slate-400 hover:text-slate-600'
           }`}
         >
-          Rendez-vous
+          Demandes & Consultations
         </button>
         <button
           onClick={() => setActiveTab('profile')}
-          className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
+          className={`pb-3.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'profile'
               ? 'border-medBlue-600 text-medBlue-700'
               : 'border-transparent text-slate-400 hover:text-slate-600'
           }`}
         >
-          Modifier mon Profil
+          Mon Profil Médecin
         </button>
       </div>
 
       {activeTab === 'appointments' ? (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Stats de gauche */}
+          
+          {/* Section Stats (colonne de gauche) */}
           <div className="lg:col-span-1 space-y-4">
-            <Card className="p-4 flex items-center gap-4 bg-white">
-              <div className="p-3 bg-medBlue-50 text-medBlue-600 rounded-xl">
-                <Clock size={20} />
+            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+              <div className="w-10 h-10 bg-medBlue-50 text-medBlue-600 rounded-xl flex items-center justify-center shrink-0">
+                <Clock size={18} />
               </div>
-              <div>
-                <span className="text-2xl font-black text-slate-800">{consultationsToday}</span>
-                <p className="text-xs text-slate-400 font-semibold uppercase">Consultations aujourd'hui</p>
+              <div className="min-w-0">
+                <span className="text-2xl font-black font-outfit text-slate-800">{consultationsToday}</span>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Aujourd'hui</p>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-4 flex items-center gap-4 bg-white">
-              <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                <AlertCircle size={20} />
+            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+              <div className="w-10 h-10 bg-amber-50 text-amber-650 rounded-xl flex items-center justify-center shrink-0">
+                <AlertCircle size={18} />
               </div>
-              <div>
-                <span className="text-2xl font-black text-slate-800">{pendingCount}</span>
-                <p className="text-xs text-slate-400 font-semibold uppercase">En attente de validation</p>
+              <div className="min-w-0">
+                <span className="text-2xl font-black font-outfit text-slate-800">{pendingCount}</span>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">En attente</p>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-4 flex items-center gap-4 bg-white">
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-                <CheckCircle size={20} />
+            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+              <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+                <CheckCircle2 size={18} className="text-emerald-500 fill-emerald-50" />
               </div>
-              <div>
-                <span className="text-2xl font-black text-slate-800">{totalCount}</span>
-                <p className="text-xs text-slate-400 font-semibold uppercase">Total consultations actives</p>
+              <div className="min-w-0">
+                <span className="text-2xl font-black font-outfit text-slate-800">{totalCount}</span>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Consultations actives</p>
               </div>
-            </Card>
+            </div>
           </div>
 
           {/* Liste des rendez-vous */}
           <div className="lg:col-span-3 space-y-4">
-            <h3 className="font-bold text-base text-slate-800 mb-2">Historique et demandes</h3>
+            <h3 className="font-bold font-outfit text-sm text-slate-800 mb-2 uppercase tracking-wider">Demandes de rendez-vous</h3>
             
             {appointments.length === 0 ? (
-              <Card className="text-center py-16 bg-slate-50 border-dashed border-2 border-slate-200">
-                <Calendar className="mx-auto text-slate-300 mb-2" size={40} />
-                <h4 className="font-bold text-slate-700">Aucune demande</h4>
-                <p className="text-sm text-slate-400 mt-1">Vous n'avez aucun rendez-vous pour le moment.</p>
+              <Card className="text-center py-20 glass-effect border-dashed border-2 border-slate-200 rounded-3xl">
+                <Calendar className="mx-auto text-slate-300 mb-3" size={44} />
+                <h4 className="font-bold font-outfit text-slate-800 text-sm">Aucun rendez-vous pour le moment</h4>
+                <p className="text-xs text-slate-400 mt-1">Les demandes de vos patients s'afficheront ici.</p>
               </Card>
             ) : (
               <div className="space-y-4">
                 {appointments.map((app) => (
-                  <Card key={app._id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1.5 text-left">
+                  <div 
+                    key={app._id} 
+                    className="glass-effect p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl hover-card-effect shadow-xs"
+                  >
+                    <div className="space-y-2 text-left min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="font-bold text-base text-slate-800 m-0">{app.patient.name}</h4>
-                        <Badge>{app.status}</Badge>
+                        <h4 className="font-bold font-outfit text-sm text-slate-800 m-0">{app.patient.name}</h4>
+                        <Badge variant={app.status === 'confirmed' ? 'success' : app.status === 'pending' ? 'warning' : 'danger'}>
+                          {app.status === 'confirmed' ? 'Validé' : app.status === 'pending' ? 'En attente' : 'Annulé'}
+                        </Badge>
                       </div>
                       
-                      <div className="flex items-center gap-4 text-xs font-semibold text-slate-600">
-                        <span>📅 {new Date(app.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short' })}</span>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
+                        <span>📅 {new Date(app.date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
                         <span>⏰ {app.slot}</span>
-                        <span>📞 {app.patient.phone || 'Non spécifié'}</span>
+                        <span>📞 {app.patient.phone || 'Aucun numéro'}</span>
                       </div>
                       
                       {app.notes && (
-                        <p className="text-xs text-slate-400 bg-slate-50 p-2 rounded-lg border border-slate-100 flex items-start gap-1 max-w-xl">
-                          <FileText size={12} className="shrink-0 mt-0.5" />
-                          <span><strong>Motif :</strong> {app.notes}</span>
-                        </p>
+                        <div className="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex items-start gap-2 max-w-xl">
+                          <FileText size={13} className="shrink-0 mt-0.5 text-slate-400" />
+                          <span className="leading-relaxed font-medium"><strong>Motif :</strong> {app.notes}</span>
+                        </div>
                       )}
                     </div>
 
-                    {/* Actions */}
+                    {/* Boutons d'actions */}
                     <div className="flex gap-2 self-start sm:self-center shrink-0">
                       {app.status === 'pending' && (
                         <Button
                           variant="success"
                           size="sm"
                           onClick={() => openActionModal('confirm', app._id)}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 text-white bg-emerald-600 hover:bg-emerald-700 border-none font-bold rounded-xl text-xs py-2 px-4"
                         >
-                          <CheckCircle size={14} /> Valider
+                          <CheckCircle size={13} /> Valider
                         </Button>
                       )}
                       {app.status !== 'cancelled' && (
@@ -300,33 +318,38 @@ const DoctorDashboard = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openActionModal('cancel', app._id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 flex items-center gap-1"
+                          className="text-red-650 hover:text-red-750 hover:bg-red-50/50 border-red-200 flex items-center gap-1.5 font-bold rounded-xl text-xs py-2 px-4"
                         >
-                          <XCircle size={14} /> Annuler
+                          <XCircle size={13} /> Annuler
                         </Button>
                       )}
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             )}
           </div>
+
         </div>
       ) : (
         /* Formulaire Modification Profil */
-        <Card className="max-w-2xl">
-          <form onSubmit={handleProfileSubmit} className="space-y-5">
-            <h3 className="font-bold text-base text-slate-800 border-b border-slate-100 pb-3 mb-2">Informations Générales</h3>
+        <div className="glass-effect rounded-3xl p-6 shadow-xl shadow-slate-100/50 max-w-2xl text-left">
+          <form onSubmit={handleProfileSubmit} className="space-y-6">
+            <div>
+              <h3 className="font-bold font-outfit text-sm text-slate-800 uppercase tracking-wider pb-3 border-b border-slate-50">
+                Informations du cabinet
+              </h3>
+            </div>
             
             {profileSuccess && (
-              <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-lg p-3 text-sm">
+              <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 rounded-xl p-3 text-xs font-semibold">
                 {profileSuccess}
               </div>
             )}
 
             {profileError && (
-              <div className="bg-red-50 border border-red-100 text-red-700 rounded-lg p-3 text-sm flex gap-1.5 items-center">
-                <AlertCircle size={16} />
+              <div className="bg-red-50 border border-red-100 text-red-705 rounded-xl p-3 text-xs font-semibold flex gap-2 items-center">
+                <AlertCircle size={15} />
                 <span>{profileError}</span>
               </div>
             )}
@@ -338,47 +361,53 @@ const DoctorDashboard = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="rounded-xl"
               />
               <Input
-                label="Téléphone"
+                label="Téléphone de contact"
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                className="rounded-xl"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Input
-                label="Honoraires Consultation (FCFA)"
+                label="Honoraires (FCFA)"
                 id="fees"
                 type="number"
                 value={fees}
                 onChange={(e) => setFees(e.target.value)}
+                className="rounded-xl"
               />
               <Input
-                label="Années d'expérience"
+                label="Expérience (Années)"
                 id="experience"
                 type="number"
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
+                className="rounded-xl"
               />
               <div className="flex flex-col gap-1.5 w-full">
-                <label className="text-sm font-semibold text-slate-700">Photo de profil (Fichier)</label>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Photo de profil</label>
                 <div className="flex items-center gap-3">
-                  {profileImage && (
+                  {profileImage ? (
                     <img
                       src={profileImage}
                       alt="Aperçu"
-                      className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+                      className="w-10 h-10 rounded-xl object-cover border border-slate-200 ring-2 ring-slate-100"
                     />
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 font-bold text-[10px]">IMG</div>
                   )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
                     className="block w-full text-xs text-slate-500
-                      file:mr-3 file:py-1.5 file:px-3
-                      file:rounded-lg file:border-0
+                      file:mr-2 file:py-1.5 file:px-3
+                      file:rounded-xl file:border-0
                       file:text-xs file:font-semibold
                       file:bg-medBlue-50 file:text-medBlue-700
                       hover:file:bg-medBlue-100 transition-colors cursor-pointer"
@@ -388,37 +417,45 @@ const DoctorDashboard = () => {
             </div>
 
             <Input
-              label="Adresse du Cabinet"
+              label="Adresse du Cabinet / Clinique"
               id="address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Quartier Escale, Thiès"
+              placeholder="Ex: Quartier Escale, Thiès"
+              className="rounded-xl"
             />
 
             <Input
-              label="Formation / Diplômes"
+              label="Formation, Diplômes & Cursus"
               id="education"
               value={education}
               onChange={(e) => setEducation(e.target.value)}
-              placeholder="Doctorat d'État en Médecine..."
+              placeholder="Ex: Doctorat d'État en Médecine..."
+              className="rounded-xl"
             />
 
             <Input
-              label="Biographie / Description"
+              label="Biographie & Présentation"
               id="biography"
               type="textarea"
               value={biography}
               onChange={(e) => setBiography(e.target.value)}
-              placeholder="Décrivez votre parcours..."
+              placeholder="Présentez votre spécialité, votre approche et vos horaires..."
+              className="rounded-xl"
             />
 
-            <div className="pt-2 border-t border-slate-100 flex justify-end">
-              <Button type="submit" variant="primary" disabled={updatingProfile}>
-                {updatingProfile ? 'Enregistrement...' : 'Enregistrer le Profil'}
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <Button 
+                type="submit" 
+                variant="primary" 
+                disabled={updatingProfile}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl text-xs border-none"
+              >
+                {updatingProfile ? 'Enregistrement...' : 'Enregistrer mon Profil'}
               </Button>
             </div>
           </form>
-        </Card>
+        </div>
       )}
 
       {/* Modal confirmation valider/annuler */}
@@ -427,11 +464,12 @@ const DoctorDashboard = () => {
         onClose={() => setActionModal({ isOpen: false, type: '', appId: null })}
         title={actionModal.type === 'confirm' ? 'Valider le rendez-vous' : 'Annuler le rendez-vous'}
         footer={
-          <>
+          <div className="flex gap-2 w-full justify-end">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setActionModal({ isOpen: false, type: '', appId: null })}
+              className="rounded-xl font-bold border-slate-200 text-xs px-4"
             >
               Fermer
             </Button>
@@ -440,23 +478,24 @@ const DoctorDashboard = () => {
               size="sm"
               onClick={handleActionConfirm}
               disabled={actionLoading}
+              className="rounded-xl font-bold text-xs px-4 border-none"
             >
               {actionLoading ? 'Traitement...' : 'Confirmer'}
             </Button>
-          </>
+          </div>
         }
       >
-        <div className="space-y-3 text-left">
+        <div className="space-y-4 text-left p-1">
           {actionError && (
-            <div className="bg-red-50 border border-red-100 rounded-lg p-3 text-red-700 text-sm flex gap-1.5 items-center">
-              <AlertCircle size={16} />
+            <div className="bg-red-50 border border-red-100 rounded-xl p-3 text-red-750 text-xs flex gap-2 items-center">
+              <AlertCircle size={15} />
               <span>{actionError}</span>
             </div>
           )}
-          <p className="text-sm text-slate-500">
+          <p className="text-xs text-slate-500 leading-relaxed font-medium">
             {actionModal.type === 'confirm'
-              ? 'Êtes-vous sûr de vouloir valider ce rendez-vous ? Le patient sera averti de la confirmation.'
-              : 'Êtes-vous sûr de vouloir annuler ce rendez-vous ? Cette action libérera le créneau.'}
+              ? 'Êtes-vous sûr de vouloir valider ce rendez-vous ? Le patient sera notifié instantanément.'
+              : 'Êtes-vous sûr de vouloir annuler ce rendez-vous ? Le patient sera averti de cette annulation.'}
           </p>
         </div>
       </Modal>
