@@ -89,7 +89,7 @@ const PatientHome = () => {
         </div>
         <div className="relative z-10 max-w-2xl space-y-4">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight m-0 text-white text-left">
-            Bonjour, {user ? user.name.split(' ')[0] : 'Babacar'} !
+            {user ? `Bonjour, ${user.name.split(' ')[0]} !` : 'Bienvenue sur MediRdv !'}
           </h1>
           <p className="text-blue-100 text-base sm:text-lg text-left">
             Trouvez votre praticien et prenez rendez-vous en ligne en quelques clics.
