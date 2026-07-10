@@ -108,6 +108,22 @@ const DoctorDashboard = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Limiter la taille de l'image (max 2Mo pour le stockage MongoDB en Base64)
+      if (file.size > 2 * 1024 * 1024) {
+        setProfileError("La photo de profil est trop volumineuse (max. 2 Mo)");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const openActionModal = (type, appId) => {
     setActionModal({ isOpen: true, type, appId });
     setActionError('');
@@ -346,14 +362,29 @@ const DoctorDashboard = () => {
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
               />
-              <Input
-                label="Photo de profil (URL)"
-                id="profileImage"
-                type="text"
-                value={profileImage}
-                onChange={(e) => setProfileImage(e.target.value)}
-                placeholder="https://..."
-              />
+              <div className="flex flex-col gap-1.5 w-full">
+                <label className="text-sm font-semibold text-slate-700">Photo de profil (Fichier)</label>
+                <div className="flex items-center gap-3">
+                  {profileImage && (
+                    <img
+                      src={profileImage}
+                      alt="Aperçu"
+                      className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="block w-full text-xs text-slate-500
+                      file:mr-3 file:py-1.5 file:px-3
+                      file:rounded-lg file:border-0
+                      file:text-xs file:font-semibold
+                      file:bg-medBlue-50 file:text-medBlue-700
+                      hover:file:bg-medBlue-100 transition-colors cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
 
             <Input
