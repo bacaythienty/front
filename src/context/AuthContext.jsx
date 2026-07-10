@@ -2,7 +2,11 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
 
-export const API_URL = import.meta.env.VITE_API_URL || 'https://back-mcq7.onrender.com/api';
+let tempUrl = import.meta.env.VITE_API_URL || 'https://back-mcq7.onrender.com';
+if (tempUrl.endsWith('/')) {
+  tempUrl = tempUrl.slice(0, -1);
+}
+export const API_URL = tempUrl.endsWith('/api') ? tempUrl : `${tempUrl}/api`;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
