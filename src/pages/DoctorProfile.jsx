@@ -6,6 +6,7 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Badge from '../components/Badge';
+import Modal from '../components/Modal';
 
 const DoctorProfile = () => {
   const { id } = useParams();
