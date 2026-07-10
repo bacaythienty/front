@@ -333,7 +333,7 @@ const DoctorDashboard = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Input
-                label="Honoraires Consultation (€)"
+                label="Honoraires Consultation (FCFA)"
                 id="fees"
                 type="number"
                 value={fees}
@@ -361,7 +361,7 @@ const DoctorDashboard = () => {
               id="address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="123 Rue de la santé, Paris"
+              placeholder="Quartier Escale, Thiès"
             />
 
             <Input

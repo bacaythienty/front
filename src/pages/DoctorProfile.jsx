@@ -177,7 +177,7 @@ const DoctorProfile = () => {
                 <span>•</span>
                 <span>💼 {doctor.doctorProfile.experience} ans d'expérience</span>
                 <span>•</span>
-                <span>💶 {doctor.doctorProfile.fees} € / consultation</span>
+                <span>💶 {doctor.doctorProfile.fees} FCFA / consultation</span>
               </div>
 
               <div className="flex items-center gap-1.5 text-xs text-slate-500">
