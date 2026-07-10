@@ -13,6 +13,19 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
+  // Pré-chauffer le serveur backend (Render wake up) dès le montage de l'application
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        const rootUrl = API_URL.replace('/api', '');
+        fetch(rootUrl).catch(() => {});
+      } catch (err) {
+        // Ignorer l'erreur
+      }
+    };
+    wakeUpServer();
+  }, []);
+
   // Charger le profil de l'utilisateur au démarrage s'il y a un token
   useEffect(() => {
     const loadUser = async () => {
