@@ -33,6 +33,10 @@ const DoctorDashboard = () => {
 
   // États pour les modals d'action
   const [actionModal, setActionModal] = useState({ isOpen: false, type: '', appId: null });
+  
+  // États pour les détails du rendez-vous
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedApp, setSelectedApp] = useState(null);
   const [actionError, setActionError] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -299,10 +303,19 @@ const DoctorDashboard = () => {
                           <span className="leading-relaxed font-medium"><strong>Motif :</strong> {app.notes}</span>
                         </div>
                       )}
-                    </div>
-
                     {/* Boutons d'actions */}
                     <div className="flex gap-2 self-start sm:self-center shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedApp(app);
+                          setDetailModalOpen(true);
+                        }}
+                        className="text-slate-650 hover:text-slate-755 hover:bg-slate-50 border-slate-200 font-bold rounded-xl text-xs py-2 px-4"
+                      >
+                        Détails
+                      </Button>
                       {app.status === 'pending' && (
                         <Button
                           variant="success"
@@ -318,11 +331,12 @@ const DoctorDashboard = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openActionModal('cancel', app._id)}
-                          className="text-red-650 hover:text-red-750 hover:bg-red-50/50 border-red-200 flex items-center gap-1.5 font-bold rounded-xl text-xs py-2 px-4"
+                          className="text-red-650 hover:text-red-755 hover:bg-red-50/50 border-red-200 flex items-center gap-1.5 font-bold rounded-xl text-xs py-2 px-4"
                         >
                           <XCircle size={13} /> Annuler
                         </Button>
                       )}
+                    </div>
                     </div>
                   </div>
                 ))}
@@ -498,6 +512,97 @@ const DoctorDashboard = () => {
               : 'Êtes-vous sûr de vouloir annuler ce rendez-vous ? Le patient sera averti de cette annulation.'}
           </p>
         </div>
+      </Modal>
+
+      {/* Modale de détails du rendez-vous pour le médecin */}
+      <Modal
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        title="Détails du rendez-vous patient"
+        footer={
+          <div className="flex gap-2 w-full justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDetailModalOpen(false)}
+              className="rounded-xl font-bold border-slate-200 text-xs px-4"
+            >
+              Fermer
+            </Button>
+            {selectedApp?.status === 'pending' && (
+              <Button
+                variant="success"
+                size="sm"
+                onClick={() => {
+                  setDetailModalOpen(false);
+                  openActionModal('confirm', selectedApp._id);
+                }}
+                className="rounded-xl font-bold text-xs px-4 text-white bg-emerald-600 border-none"
+              >
+                Valider
+              </Button>
+            )}
+            {selectedApp?.status !== 'cancelled' && (
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  setDetailModalOpen(false);
+                  openActionModal('cancel', selectedApp._id);
+                }}
+                className="rounded-xl font-bold text-xs px-4"
+              >
+                Annuler RDV
+              </Button>
+            )}
+          </div>
+        }
+      >
+        {selectedApp && (
+          <div className="space-y-4 text-xs text-slate-600 font-medium text-left p-1">
+            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100/50">
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Informations du Patient</p>
+              <p className="font-bold text-slate-800 text-sm">{selectedApp.patient.name}</p>
+              <p className="text-slate-500 font-semibold mt-1">📞 {selectedApp.patient.phone || 'Non spécifié'}</p>
+              <p className="text-slate-500 font-semibold">📧 {selectedApp.patient.email}</p>
+            </div>
+
+            <div className="space-y-2.5 bg-white/50 p-2.5 rounded-2xl border border-slate-100/50 divide-y divide-slate-100">
+              <div className="flex justify-between items-center py-1">
+                <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Statut du rendez-vous</span>
+                <Badge variant={selectedApp.status === 'confirmed' ? 'success' : selectedApp.status === 'pending' ? 'warning' : 'danger'}>
+                  {selectedApp.status === 'confirmed' ? 'Validé' : selectedApp.status === 'pending' ? 'En attente' : 'Annulé'}
+                </Badge>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Date de consultation</span>
+                <span className="font-bold text-slate-850">
+                  {new Date(selectedApp.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-center py-2">
+                <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Heure</span>
+                <span className="font-bold text-slate-850">{selectedApp.slot}</span>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Honoraires</span>
+                <span className="font-extrabold text-slate-800 text-sm">
+                  {fees ? `${fees.toLocaleString('fr-FR')} FCFA` : 'Non spécifié'}
+                </span>
+              </div>
+            </div>
+
+            {selectedApp.notes && (
+              <div className="space-y-1 bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
+                <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Motif de consultation (Notes du patient)</p>
+                <p className="text-slate-650 leading-relaxed font-medium mt-0.5">"{selectedApp.notes}"</p>
+              </div>
+            )}
+          </div>
+        )}
       </Modal>
     </div>
   );

@@ -25,6 +25,7 @@ const DoctorProfile = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [booking, setBooking] = useState(false);
+  const [recapModalOpen, setRecapModalOpen] = useState(false);
 
   // Charger le médecin
   useEffect(() => {
@@ -70,7 +71,7 @@ const DoctorProfile = () => {
     fetchSlots();
   }, [selectedDate, id]);
 
-  const handleBooking = async (e) => {
+  const handlePreBooking = (e) => {
     e.preventDefault();
     if (!token) {
       navigate('/login');
@@ -89,6 +90,11 @@ const DoctorProfile = () => {
 
     setError('');
     setSuccess('');
+    setRecapModalOpen(true);
+  };
+
+  const handleBooking = async () => {
+    setRecapModalOpen(false);
     setBooking(true);
 
     try {
@@ -251,7 +257,7 @@ const DoctorProfile = () => {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleBooking} className="space-y-5">
+              <form onSubmit={handlePreBooking} className="space-y-5">
                 {error && (
                   <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-start gap-2 text-red-700 text-xs">
                     <AlertCircle className="shrink-0 mt-0.5" size={15} />
@@ -339,10 +345,85 @@ const DoctorProfile = () => {
                 </Button>
               </form>
             )}
+      </div>
+      </div>
+      </div>
+    
+    {/* Modale récapitulative avant confirmation */}
+    <Modal
+      isOpen={recapModalOpen}
+      onClose={() => setRecapModalOpen(false)}
+      title="Récapitulatif de votre rendez-vous"
+      footer={
+        <div className="flex gap-2 w-full justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setRecapModalOpen(false)}
+            className="rounded-xl font-bold border-slate-200 text-xs px-4"
+          >
+            Modifier
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleBooking}
+            className="rounded-xl font-bold text-xs px-4 bg-slate-900 border-none hover:bg-slate-800 text-white"
+          >
+            Confirmer la réservation
+          </Button>
+        </div>
+      }
+    >
+      <div className="space-y-4 text-xs text-slate-600 font-medium text-left p-1">
+        <div className="flex items-center gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100/50">
+          <img 
+            src={doctor.doctorProfile.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150"} 
+            alt={doctor.name} 
+            className="w-12 h-12 rounded-xl object-cover ring-2 ring-slate-100"
+          />
+          <div>
+            <p className="font-bold text-slate-800 text-sm">{doctor.name}</p>
+            <p className="text-medBlue-600 font-bold text-[10px] uppercase tracking-wider mt-0.5">
+              {doctor.doctorProfile?.specialty?.name || 'Généraliste'}
+            </p>
           </div>
         </div>
 
+        <div className="space-y-2.5 bg-white/50 p-2.5 rounded-2xl border border-slate-100/50 divide-y divide-slate-100">
+          <div className="flex justify-between items-center py-1">
+            <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Date de consultation</span>
+            <span className="font-bold text-slate-850">
+              {new Date(selectedDate).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            </span>
+          </div>
+          
+          <div className="flex justify-between items-center py-2">
+            <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Heure / Créneau</span>
+            <span className="font-bold text-slate-850">{selectedSlot}</span>
+          </div>
+
+          <div className="flex justify-between items-center py-2">
+            <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Lieu de consultation</span>
+            <span className="font-bold text-slate-850 truncate max-w-[200px]">{doctor.doctorProfile.address || 'Sénégal'}</span>
+          </div>
+
+          <div className="flex justify-between items-center py-2">
+            <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Honoraires</span>
+            <span className="font-extrabold text-slate-800 text-sm">
+              {doctor.doctorProfile.fees ? `${doctor.doctorProfile.fees.toLocaleString('fr-FR')} FCFA` : 'Non spécifié'}
+            </span>
+          </div>
+        </div>
+
+        {notes && (
+          <div className="space-y-1 bg-slate-50/50 p-3 rounded-2xl border border-slate-100/50">
+            <p className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Motif de consultation</p>
+            <p className="text-slate-650 leading-relaxed font-medium italic mt-0.5">"{notes}"</p>
+          </div>
+        )}
       </div>
+    </Modal>
     </div>
   );
 };
