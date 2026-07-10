@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, AlertCircle, Calendar } from 'lucide-react';
@@ -7,8 +7,21 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  // Rediriger si déjà connecté
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else if (user.role === 'doctor') {
+        navigate('/doctor', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [user, navigate]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

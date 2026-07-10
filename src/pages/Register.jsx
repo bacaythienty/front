@@ -7,8 +7,21 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 
 const Register = () => {
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const navigate = useNavigate();
+
+  // Rediriger si déjà connecté
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else if (user.role === 'doctor') {
+        navigate('/doctor', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [user, navigate]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
