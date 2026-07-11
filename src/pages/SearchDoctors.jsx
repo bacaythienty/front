@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../context/AuthContext';
 import { Search, MapPin, Stethoscope, Star, Sparkles, Filter, CheckCircle2, RotateCcw } from 'lucide-react';
@@ -13,6 +13,14 @@ const SearchDoctors = () => {
   const [doctors, setDoctors] = useState([]);
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, []);
 
   // Filtres locaux liés à l'état URL
   const [search, setSearch] = useState(searchParams.get('q') || '');
@@ -97,6 +105,7 @@ const SearchDoctors = () => {
             
             <form onSubmit={handleFilterSubmit} className="space-y-4">
               <Input
+                ref={searchInputRef}
                 label="Rechercher par nom"
                 id="search"
                 value={search}
