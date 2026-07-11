@@ -41,12 +41,16 @@ function Footer() {
         </div>
 
         {/* Ligne inférieure compacte */}
-        <div className="border-t border-slate-800/60 mt-6 pt-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] text-slate-500">
+        <div className="border-t border-slate-800/60 mt-6 pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
           <p>&copy; {new Date().getFullYear()} MediRdv Sénégal. Tous droits réservés.</p>
-          <div className="flex gap-4">
-            <span onClick={() => setAboutModalOpen(true)} className="hover:text-white transition-colors cursor-pointer font-bold">
-              L'Équipe (Groupe 2)
-            </span>
+          <div className="flex items-center gap-4">
+            {/* Bouton cliquable hautement visible */}
+            <button 
+              onClick={() => setAboutModalOpen(true)} 
+              className="bg-gradient-to-tr from-medBlue-600 to-cyan-500 hover:from-medBlue-700 hover:to-cyan-600 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-full shadow-md shadow-medBlue-900/20 hover:scale-105 transition-all active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer border-none"
+            >
+              <Users size={11} className="text-white fill-white/10" /> L'Équipe (Groupe 2)
+            </button>
             <span className="hover:text-slate-400 transition-colors cursor-pointer">Conditions</span>
             <span className="hover:text-slate-400 transition-colors cursor-pointer">Confidentialité</span>
           </div>
@@ -62,16 +66,41 @@ function Footer() {
         footer={
           <button 
             onClick={() => setAboutModalOpen(false)}
-            className="px-4 py-2 bg-slate-905 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors"
+            className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer border-none"
           >
             Fermer
           </button>
         }
       >
-        <div className="space-y-4 text-xs text-slate-600 font-medium text-left p-1">
-          <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-            Cette application a été entièrement développée pour la soutenance de projet par le **Groupe 2**.
-          </p>
+        <div className="space-y-4 text-xs text-slate-650 font-medium text-left p-1">
+          {/* Section Logos Académiques */}
+          <div className="flex justify-center items-center gap-6 bg-white p-4 rounded-2xl border border-slate-100">
+            <img src="/assets/logos/isep.png" alt="ISEP Thiès" className="h-10 object-contain" />
+            <img src="/assets/logos/eit.png" alt="EIT" className="h-9 object-contain" />
+            <img src="/assets/logos/dwm.png" alt="DWM" className="h-9 object-contain" />
+          </div>
+
+          {/* Informations Académiques */}
+          <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100/60 space-y-2">
+            <div className="flex justify-between items-center text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 pb-1.5">
+              <span>Institution académique</span>
+              <span className="bg-medBlue-50 text-medBlue-650 px-2 py-0.5 rounded-md text-[9px]">Promo 13</span>
+            </div>
+            <div className="space-y-1 text-slate-700">
+              <p className="text-[11px] font-bold">
+                Institut : <span className="text-slate-500 font-semibold">ISEP de Thiès (Institut Supérieur d'Enseignement Professionnel)</span>
+              </p>
+              <p className="text-[11px] font-bold">
+                Département : <span className="text-slate-500 font-semibold">EIT (Électronique, Informatique et Télécommunication)</span>
+              </p>
+              <p className="text-[11px] font-bold">
+                Métier : <span className="text-slate-500 font-semibold">DWM (Développement Web & Mobile)</span>
+              </p>
+              <p className="text-[11px] font-bold">
+                Équipe : <span className="text-slate-500 font-semibold">Groupe 2</span>
+              </p>
+            </div>
+          </div>
 
           {/* Chef de projet */}
           <div className="bg-gradient-to-tr from-medBlue-50/50 to-cyan-50/30 p-4 rounded-2xl border border-medBlue-100/50 flex items-center gap-3.5">
@@ -79,7 +108,7 @@ function Footer() {
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] text-medBlue-600 font-bold uppercase tracking-wider block">Chef de Projet / Scrum Master</span>
+              <span className="text-[9px] text-medBlue-600 font-bold uppercase tracking-wider block">Chef de Projet / Scrum Master</span>
               <span className="text-sm font-extrabold text-slate-800">Bacary Thienty</span>
             </div>
           </div>
@@ -91,7 +120,7 @@ function Footer() {
                 <Monitor className="w-4 h-4 text-cyan-500" />
                 <span className="text-[10px] uppercase tracking-wider">Développeurs Frontend</span>
               </div>
-              <ul className="space-y-2 text-xs text-slate-600 font-semibold pl-1">
+              <ul className="space-y-2 text-xs text-slate-500 font-semibold pl-1">
                 <li>• Bacary THIENTY</li>
                 <li>• Boubacar Sall</li>
               </ul>
@@ -103,18 +132,12 @@ function Footer() {
                 <Database className="w-4 h-4 text-indigo-500" />
                 <span className="text-[10px] uppercase tracking-wider">Développeurs Backend</span>
               </div>
-              <ul className="space-y-2 text-xs text-slate-600 font-semibold pl-1">
+              <ul className="space-y-2 text-xs text-slate-500 font-semibold pl-1">
                 <li>• Ahmadou Ly</li>
                 <li>• Mamadou Ndour</li>
                 <li>• Amadou Aw</li>
               </ul>
             </div>
-          </div>
-
-          {/* Footer membres */}
-          <div className="border-t border-slate-100 pt-3 flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-            <Users size={12} className="text-slate-400" />
-            <span>Groupe 2 • Soutenance de Projet</span>
           </div>
         </div>
       </Modal>
