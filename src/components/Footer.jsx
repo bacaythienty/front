@@ -85,11 +85,11 @@ function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-medBlue-400 shrink-0" />
-                <span>+221 33 800 00 00</span>
+                <span>+221 779354678</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-medBlue-400 shrink-0" />
-                <span>contact@medirdv.sn</span>
+                <span>bacarythienty803@gmail.com</span>
               </li>
               <li className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
