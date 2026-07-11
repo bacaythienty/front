@@ -169,7 +169,7 @@ const DoctorProfile = () => {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Card Profil Principale */}
-          <div className="glass-effect rounded-3xl p-6 text-left flex flex-col sm:flex-row gap-6 relative overflow-hidden">
+          <Card className="flex flex-col sm:flex-row gap-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-medBlue-500/5 rounded-full blur-2xl" />
             
             <img
@@ -211,10 +211,10 @@ const DoctorProfile = () => {
                 <span className="font-medium">{doctor.doctorProfile.address || 'Sénégal'}</span>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Biographie & Formation */}
-          <div className="glass-effect rounded-3xl p-6 text-left space-y-6">
+          <Card className="space-y-6">
             {doctor.doctorProfile.biography && (
               <div className="space-y-2">
                 <h3 className="font-bold font-outfit text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-50">
@@ -234,12 +234,12 @@ const DoctorProfile = () => {
                 <p className="text-xs text-slate-500 leading-relaxed font-medium">{doctor.doctorProfile.education}</p>
               </div>
             )}
-          </div>
+          </Card>
         </div>
 
         {/* Formulaire de réservation (1/3 de l'écran) */}
         <div className="lg:col-span-1">
-          <div className="glass-effect rounded-3xl p-6 text-left sticky top-20 shadow-xl shadow-slate-100/50">
+          <Card className="text-left sticky top-20 shadow-xl shadow-slate-100/50">
             <h3 className="font-bold font-outfit text-sm text-slate-800 mb-4 flex items-center gap-2 pb-3 border-b border-slate-50 uppercase tracking-wider">
               <Calendar size={16} className="text-medBlue-600 shrink-0" />
               Prendre rendez-vous
@@ -346,7 +346,7 @@ const DoctorProfile = () => {
                 </Button>
               </form>
             )}
-      </div>
+          </Card>
       </div>
       </div>
     

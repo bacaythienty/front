@@ -4,6 +4,7 @@ import { useAuth, API_URL } from '../context/AuthContext';
 import { AlertCircle, Heart, Sparkles, User, Shield } from 'lucide-react';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import Card from '../components/Card';
 
 const Register = () => {
   const { register, user } = useAuth();
@@ -106,7 +107,7 @@ const Register = () => {
         </div>
 
         {/* Card Inscription */}
-        <div className="glass-effect rounded-3xl p-8 shadow-xl shadow-slate-100/50">
+        <Card className="p-8 shadow-xl shadow-slate-100/50">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-start gap-2 text-red-700 text-xs">
@@ -231,7 +232,7 @@ const Register = () => {
               </Link>
             </p>
           </div>
-        </div>
+        </Card>
 
       </div>
     </div>

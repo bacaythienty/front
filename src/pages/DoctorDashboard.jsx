@@ -235,35 +235,35 @@ const DoctorDashboard = () => {
           
           {/* Section Stats (colonne de gauche) */}
           <div className="lg:col-span-1 space-y-4">
-            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+            <Card className="flex items-center gap-4 p-4 shadow-xs">
               <div className="w-10 h-10 bg-medBlue-50 text-medBlue-600 rounded-xl flex items-center justify-center shrink-0">
                 <Clock size={18} />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 text-left">
                 <span className="text-2xl font-black font-outfit text-slate-800">{consultationsToday}</span>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Aujourd'hui</p>
               </div>
-            </div>
+            </Card>
 
-            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+            <Card className="flex items-center gap-4 p-4 shadow-xs">
               <div className="w-10 h-10 bg-amber-50 text-amber-650 rounded-xl flex items-center justify-center shrink-0">
                 <AlertCircle size={18} />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 text-left">
                 <span className="text-2xl font-black font-outfit text-slate-800">{pendingCount}</span>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">En attente</p>
               </div>
-            </div>
+            </Card>
 
-            <div className="glass-effect p-4 flex items-center gap-4 rounded-2xl shadow-xs">
+            <Card className="flex items-center gap-4 p-4 shadow-xs">
               <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
                 <CheckCircle2 size={18} className="text-emerald-500 fill-emerald-50" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 text-left">
                 <span className="text-2xl font-black font-outfit text-slate-800">{totalCount}</span>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Consultations actives</p>
               </div>
-            </div>
+            </Card>
           </div>
 
           {/* Liste des rendez-vous */}
@@ -279,9 +279,14 @@ const DoctorDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {appointments.map((app) => (
-                  <div 
+                  <Card 
                     key={app._id} 
-                    className="glass-effect p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl hover-card-effect shadow-xs"
+                    hoverable
+                    onClick={() => {
+                      setSelectedApp(app);
+                      setDetailModalOpen(true);
+                    }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                   >
                     <div className="space-y-2 text-left min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -303,8 +308,10 @@ const DoctorDashboard = () => {
                           <span className="leading-relaxed font-medium"><strong>Motif :</strong> {app.notes}</span>
                         </div>
                       )}
+                    </div>
+
                     {/* Boutons d'actions */}
-                    <div className="flex gap-2 self-start sm:self-center shrink-0">
+                    <div className="flex gap-2 self-start sm:self-center shrink-0" onClick={(e) => e.stopPropagation()}>
                       <Button
                         variant="outline"
                         size="sm"
@@ -312,7 +319,7 @@ const DoctorDashboard = () => {
                           setSelectedApp(app);
                           setDetailModalOpen(true);
                         }}
-                        className="text-slate-650 hover:text-slate-755 hover:bg-slate-50 border-slate-200 font-bold rounded-xl text-xs py-2 px-4"
+                        className="text-slate-655 hover:text-slate-755 hover:bg-slate-50 border-slate-200 font-bold rounded-xl text-xs py-2 px-4"
                       >
                         Détails
                       </Button>
@@ -337,8 +344,7 @@ const DoctorDashboard = () => {
                         </Button>
                       )}
                     </div>
-                    </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             )}
@@ -347,7 +353,7 @@ const DoctorDashboard = () => {
         </div>
       ) : (
         /* Formulaire Modification Profil */
-        <div className="glass-effect rounded-3xl p-6 shadow-xl shadow-slate-100/50 max-w-2xl text-left">
+        <Card className="max-w-2xl text-left shadow-xl shadow-slate-100/50">
           <form onSubmit={handleProfileSubmit} className="space-y-6">
             <div>
               <h3 className="font-bold font-outfit text-sm text-slate-800 uppercase tracking-wider pb-3 border-b border-slate-50">
@@ -469,7 +475,7 @@ const DoctorDashboard = () => {
               </Button>
             </div>
           </form>
-        </div>
+        </Card>
       )}
 
       {/* Modal confirmation valider/annuler */}

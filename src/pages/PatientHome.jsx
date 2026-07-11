@@ -160,16 +160,17 @@ const PatientHome = () => {
               {specialties.map((spec) => {
                 const IconComponent = iconMap[spec.icon] || Activity;
                 return (
-                  <div
+                  <Card
                     key={spec._id}
+                    hoverable
                     onClick={() => handleSpecialtyClick(spec._id)}
-                    className="glass-effect hover-card-effect flex flex-col items-center justify-center text-center p-5 gap-3 rounded-2xl cursor-pointer"
+                    className="flex flex-col items-center justify-center text-center p-5 gap-3"
                   >
                     <div className="w-12 h-12 bg-medBlue-50 text-medBlue-600 rounded-2xl flex items-center justify-center transition-transform duration-300">
                       <IconComponent size={24} />
                     </div>
                     <span className="font-bold text-sm text-slate-800">{spec.name}</span>
-                  </div>
+                  </Card>
                 );
               })}
             </div>
@@ -184,10 +185,11 @@ const PatientHome = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {popularDoctors.map((doc) => (
-                <div
+                <Card
                   key={doc._id}
+                  hoverable
                   onClick={() => navigate(`/doctor/${doc._id}`)}
-                  className="glass-effect hover-card-effect p-4 text-left flex gap-4 rounded-2xl cursor-pointer relative"
+                  className="p-4 text-left flex gap-4"
                 >
                   <div className="relative shrink-0">
                     <img
@@ -214,7 +216,7 @@ const PatientHome = () => {
                       <span className="truncate">{doc.doctorProfile.address || 'Sénégal'}</span>
                     </div>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           </div>

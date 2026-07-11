@@ -183,9 +183,11 @@ const SearchDoctors = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {doctors.map((doc) => (
-                <div 
+                <Card 
                   key={doc._id} 
-                  className="glass-effect hover-card-effect p-5 text-left flex flex-col justify-between rounded-2xl shadow-xs"
+                  hoverable
+                  onClick={() => navigate(`/doctor/${doc._id}`)}
+                  className="flex flex-col justify-between"
                 >
                   <div className="flex gap-4">
                     <div className="relative shrink-0">
@@ -240,7 +242,7 @@ const SearchDoctors = () => {
                       Prendre RDV
                     </Button>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}
