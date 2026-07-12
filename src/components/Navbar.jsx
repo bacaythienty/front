@@ -266,19 +266,15 @@ const Navbar = () => {
                         )}
                       </div>
                       <div className="max-h-72 overflow-y-auto divide-y divide-slate-50">
-                        {notifications.length > 0 ? (
-                          notifications.map((notif) => (
+                        {unreadCount > 0 ? (
+                          notifications.filter(notif => !notif.isRead).map((notif) => (
                             <div 
                               key={notif._id} 
                               onClick={() => handleMarkAsRead(notif._id)}
-                              className={`p-3.5 text-left cursor-pointer transition-colors ${
-                                !notif.isRead ? 'bg-medBlue-50/20 hover:bg-medBlue-50/40' : 'hover:bg-slate-50/50'
-                              }`}
+                              className="p-3.5 text-left cursor-pointer transition-colors bg-medBlue-50/20 hover:bg-medBlue-50/40"
                             >
                               <div className="flex gap-2.5 items-start">
-                                <div className={`w-2 h-2 rounded-full shrink-0 mt-1.5 ${
-                                  !notif.isRead ? 'bg-medBlue-500' : 'bg-transparent'
-                                }`} />
+                                <div className="w-2 h-2 rounded-full shrink-0 mt-1.5 bg-medBlue-500" />
                                 <div className="space-y-0.5">
                                   <p className="font-semibold text-slate-800 text-xs">{notif.title}</p>
                                   <p className="text-slate-500 text-xs leading-relaxed">{notif.message}</p>
@@ -430,7 +426,10 @@ const Navbar = () => {
             {user && (
               <div className="relative" ref={notifMenuRef}>
                 <button 
-                  onClick={() => setShowNotifications(!showNotifications)}
+                  onClick={() => {
+                    setShowNotifications(!showNotifications);
+                    setIsOpen(false);
+                  }}
                   className="w-9 h-9 rounded-lg border border-slate-100 flex items-center justify-center text-slate-500"
                 >
                   <Bell className="w-4.5 h-4.5" />
@@ -438,6 +437,53 @@ const Navbar = () => {
                     <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full" />
                   )}
                 </button>
+
+                {/* Mobile Dropdown Notifications */}
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl border border-slate-100 shadow-xl py-2 z-50 overflow-hidden">
+                    <div className="px-4 py-2 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                      <span className="font-outfit font-semibold text-slate-800 text-sm">Notifications</span>
+                      {unreadCount > 0 && (
+                        <button 
+                          onClick={handleMarkAllAsRead}
+                          className="text-xs text-medBlue-600 hover:text-medBlue-700 font-medium transition-colors"
+                        >
+                          Tout lire
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-64 overflow-y-auto divide-y divide-slate-50">
+                      {unreadCount > 0 ? (
+                        notifications.filter(notif => !notif.isRead).map((notif) => (
+                          <div 
+                            key={notif._id} 
+                            onClick={() => handleMarkAsRead(notif._id)}
+                            className="p-3 text-left cursor-pointer transition-colors bg-medBlue-50/20 hover:bg-medBlue-50/40"
+                          >
+                            <div className="flex gap-2.5 items-start">
+                              <div className="w-2 h-2 rounded-full shrink-0 mt-1.5 bg-medBlue-500" />
+                              <div className="space-y-0.5">
+                                <p className="font-semibold text-slate-800 text-xs">{notif.title}</p>
+                                <p className="text-slate-550 text-[11px] leading-relaxed">{notif.message}</p>
+                                <p className="text-[9px] text-slate-400">
+                                  {new Date(notif.createdAt).toLocaleDateString('fr-FR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-6 text-center">
+                          <Bell className="w-6 h-6 text-slate-200 mx-auto mb-2" />
+                          <p className="text-slate-400 text-xs font-medium">Aucune notification</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
             
