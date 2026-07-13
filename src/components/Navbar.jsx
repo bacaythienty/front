@@ -75,36 +75,38 @@ const Navbar = () => {
   };
 
   const handleMarkAsRead = async (id) => {
+    // 1. Mise à jour locale instantanée (optimiste)
+    setNotifications(prev => 
+      prev.map(n => n._id === id ? { ...n, isRead: true } : n)
+    );
+
+    // 2. Appel API en arrière-plan
     try {
-      const response = await fetch(`${API_URL}/notifications/${id}/read`, {
+      await fetch(`${API_URL}/notifications/${id}/read`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (response.ok) {
-        setNotifications(prev => 
-          prev.map(n => n._id === id ? { ...n, isRead: true } : n)
-        );
-      }
     } catch (err) {
-      console.error('Erreur mark notification as read:', err);
+      console.error('Erreur backend mark notification as read:', err);
     }
   };
 
   const handleMarkAllAsRead = async () => {
+    // 1. Mise à jour locale instantanée (optimiste)
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+
+    // 2. Appel API en arrière-plan
     try {
-      const response = await fetch(`${API_URL}/notifications/read-all`, {
+      await fetch(`${API_URL}/notifications/read-all`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (response.ok) {
-        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-      }
     } catch (err) {
-      console.error('Erreur mark all as read:', err);
+      console.error('Erreur backend mark all as read:', err);
     }
   };
 
