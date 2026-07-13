@@ -32,10 +32,6 @@ function Footer() {
             <Link to="/search" className="hover:text-white transition-colors">Rechercher</Link>
             <Link to="/login" className="hover:text-white transition-colors">Connexion</Link>
             <Link to="/register" className="hover:text-white transition-colors">Inscription</Link>
-            <span className="text-slate-700">|</span>
-            <span className="flex items-center gap-1 text-[11px] text-slate-400 font-bold">
-              📞 +221 779354678
-            </span>
           </div>
 
         </div>
