@@ -312,10 +312,10 @@ const Navbar = () => {
                       <img 
                         src={user.doctorProfile.profileImage} 
                         alt={user.name} 
-                        className="w-8.5 h-8.5 rounded-xl object-cover ring-2 ring-slate-100 group-hover:ring-medBlue-100 transition-all"
+                        className="w-9 h-9 rounded-xl object-cover ring-2 ring-slate-100 group-hover:ring-medBlue-100 transition-all"
                       />
                     ) : (
-                      <div className="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-medBlue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-inner uppercase">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-medBlue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-xs shadow-inner uppercase">
                         {getInitials(user.name)}
                       </div>
                     )}
