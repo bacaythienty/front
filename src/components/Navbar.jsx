@@ -123,7 +123,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-slate-100/80 sticky top-0 z-40">
+    <nav className="bg-white/70 backdrop-blur-md border-b border-slate-100/40 sticky top-0 z-40 shadow-xs shadow-slate-100/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           
@@ -133,35 +133,35 @@ const Navbar = () => {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-medBlue-600 to-cyan-500 flex items-center justify-center shadow-md shadow-medBlue-200 transition-transform group-hover:scale-105 duration-300">
                 <Heart className="w-5 h-5 text-white fill-white/10" />
               </div>
-              <span className="font-outfit text-xl font-bold tracking-tight text-slate-900">
-                Medi<span className="text-medBlue-600">Rdv</span>
+              <span className="font-outfit text-xl font-extrabold tracking-tight text-slate-800">
+                Medi<span className="bg-gradient-to-r from-medBlue-600 to-cyan-500 bg-clip-text text-transparent">Rdv</span>
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-2">
             {user && user.role === 'patient' && (
               <>
                 <Link 
                   to="/search" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/search' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Search size={16} /> Rechercher
+                  <Search size={14} /> Rechercher
                 </Link>
                 <Link 
                   to="/appointments" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/appointments' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Clock size={16} /> Mes RDV
+                  <Clock size={14} /> Mes RDV
                 </Link>
               </>
             )}
@@ -170,23 +170,23 @@ const Navbar = () => {
               <>
                 <Link 
                   to="/doctor" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/doctor' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Shield size={16} /> Tableau de bord
+                  <Shield size={14} /> Tableau de bord
                 </Link>
                 <Link 
                   to="/doctor/availability" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/doctor/availability' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Calendar size={16} /> Disponibilités
+                  <Calendar size={14} /> Disponibilités
                 </Link>
               </>
             )}
@@ -195,33 +195,33 @@ const Navbar = () => {
               <>
                 <Link 
                   to="/admin" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/admin' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Shield size={16} /> Dashboard
+                  <Shield size={14} /> Dashboard
                 </Link>
                 <Link 
                   to="/admin/users" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/admin/users' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <User size={16} /> Utilisateurs
+                  <User size={14} /> Utilisateurs
                 </Link>
                 <Link 
                   to="/admin/specialties" 
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                     location.pathname === '/admin/specialties' 
-                      ? 'text-medBlue-600 bg-medBlue-50/50' 
-                      : 'text-slate-600 hover:text-medBlue-600 hover:bg-slate-50'
+                      ? 'text-medBlue-600 bg-medBlue-50/60 border border-medBlue-100/40 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
                   }`}
                 >
-                  <Settings size={16} /> Spécialités
+                  <Settings size={14} /> Spécialités
                 </Link>
               </>
             )}
