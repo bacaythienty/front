@@ -92,28 +92,28 @@ const PatientHome = () => {
       {/* 1. Hero / Header de bienvenue premium */}
       <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-medBlue-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-800 overflow-hidden">
         {/* Glows d'arrière-plan */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-medBlue-600/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-cyan-600/10 rounded-full blur-2xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-medBlue-600/10 rounded-full blur-3xl animate-pulse-glow" />
+        <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-cyan-600/10 rounded-full blur-2xl animate-pulse-glow delay-150" />
         
         <div className="relative z-10 max-w-2xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300 animate-fade-in-up">
             <Sparkles size={14} className="animate-pulse" />
             <span>Votre santé est notre priorité absolue</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-outfit tracking-tight leading-tight text-white text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-outfit tracking-tight leading-tight text-white text-left animate-fade-in-up delay-75">
             {user ? (
               <>Bonjour, <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">{user.name.split(' ')[0]}</span> !</>
             ) : (
               <>Prenez soin de vous avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">MediRdv</span></>
             )}
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed text-left max-w-xl">
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed text-left max-w-xl animate-fade-in-up delay-150">
             Trouvez les praticiens les plus qualifiés près de chez vous et réservez une consultation en ligne en moins de 2 minutes.
           </p>
 
           {/* Formulaire de recherche repensé */}
-          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/10 mt-6 max-w-xl">
+          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/10 mt-6 max-w-xl animate-fade-in-up delay-300">
             <div className="flex items-center gap-2 pl-3 text-slate-300 flex-1">
               <Search size={18} className="text-cyan-400 shrink-0" />
               <input
