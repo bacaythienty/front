@@ -95,43 +95,58 @@ const PatientHome = () => {
         <div className="absolute top-0 right-0 w-96 h-96 bg-medBlue-600/10 rounded-full blur-3xl animate-pulse-glow" />
         <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-cyan-600/10 rounded-full blur-2xl animate-pulse-glow delay-150" />
         
-        <div className="relative z-10 max-w-2xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300 animate-fade-in-up">
-            <Sparkles size={14} className="animate-pulse" />
-            <span>Votre santé est notre priorité absolue</span>
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-outfit tracking-tight leading-tight text-white text-left animate-fade-in-up delay-75">
-            {user ? (
-              <>Bonjour, <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">{user.name.split(' ')[0]}</span> !</>
-            ) : (
-              <>Prenez soin de vous avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">MediRdv</span></>
-            )}
-          </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed text-left max-w-xl animate-fade-in-up delay-150">
-            Trouvez les praticiens les plus qualifiés près de chez vous et réservez une consultation en ligne en moins de 2 minutes.
-          </p>
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          {/* Contenu gauche */}
+          <div className="md:col-span-2 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300 animate-fade-in-up">
+              <Sparkles size={14} className="animate-pulse" />
+              <span>Votre santé est notre priorité absolue</span>
+            </div>
+            
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-outfit tracking-tight leading-tight text-white text-left animate-fade-in-up delay-75">
+              {user ? (
+                <>Bonjour, <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">{user.name.split(' ')[0]}</span> !</>
+              ) : (
+                <>Prenez soin de vous avec <span className="text-transparent bg-clip-text bg-gradient-to-r from-medBlue-400 to-cyan-300 font-extrabold">MediRdv</span></>
+              )}
+            </h1>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed text-left max-w-xl animate-fade-in-up delay-150">
+              Trouvez les praticiens les plus qualifiés près de chez vous et réservez une consultation en ligne en moins de 2 minutes.
+            </p>
 
-          {/* Formulaire de recherche repensé */}
-          <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/10 mt-6 max-w-xl animate-fade-in-up delay-300">
-            <div className="flex items-center gap-2 pl-3 text-slate-300 flex-1">
-              <Search size={18} className="text-cyan-400 shrink-0" />
-              <input
-                type="text"
-                placeholder="Spécialité, nom du médecin, ville..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent text-white text-base md:text-sm focus:outline-none placeholder:text-slate-400 py-2.5"
+            {/* Formulaire de recherche repensé */}
+            <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/10 mt-6 max-w-xl animate-fade-in-up delay-300">
+              <div className="flex items-center gap-2 pl-3 text-slate-300 flex-1">
+                <Search size={18} className="text-cyan-400 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Spécialité, nom du médecin, ville..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full bg-transparent text-white text-base md:text-sm focus:outline-none placeholder:text-slate-400 py-2.5"
+                />
+              </div>
+              <Button 
+                type="submit" 
+                variant="primary" 
+                className="bg-gradient-to-tr from-medBlue-600 to-cyan-500 hover:from-medBlue-700 hover:to-cyan-600 border-none font-bold py-3 px-6 rounded-xl shadow-lg shadow-medBlue-900/20"
+              >
+                Rechercher
+              </Button>
+            </form>
+          </div>
+
+          {/* Avatar Médecin à droite */}
+          <div className="hidden md:flex justify-end items-center pr-4">
+            <div className="relative animate-float">
+              <div className="absolute inset-0 bg-gradient-to-tr from-medBlue-500 to-cyan-400 rounded-full blur-2xl opacity-35" />
+              <img 
+                src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=280" 
+                alt="Médecin Conseil" 
+                className="w-44 h-44 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10"
               />
             </div>
-            <Button 
-              type="submit" 
-              variant="primary" 
-              className="bg-gradient-to-tr from-medBlue-600 to-cyan-500 hover:from-medBlue-700 hover:to-cyan-600 border-none font-bold py-3 px-6 rounded-xl shadow-lg shadow-medBlue-900/20"
-            >
-              Rechercher
-            </Button>
-          </form>
+          </div>
         </div>
       </div>
 
