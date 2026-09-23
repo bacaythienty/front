@@ -9,16 +9,28 @@ if (tempUrl.endsWith('/')) {
 export const API_URL = tempUrl.endsWith('/api') ? tempUrl : `${tempUrl}/api`;
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('medirdv_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('medirdv_user');
+    return Boolean(savedToken && !savedUser);
+  });
 
   // Pré-chauffer le serveur backend (Render wake up) dès le montage de l'application
   useEffect(() => {
     const wakeUpServer = async () => {
       try {
         const rootUrl = API_URL.replace('/api', '');
-        fetch(rootUrl).catch(() => {});
+        fetch(rootUrl, { keepalive: true }).catch(() => {});
+        fetch(`${API_URL}/specialties`, { keepalive: true }).catch(() => {});
       } catch (err) {
         // Ignorer l'erreur
       }
@@ -26,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     wakeUpServer();
   }, []);
 
-  // Charger le profil de l'utilisateur au démarrage s'il y a un token
+  // Charger ou rafraîchir le profil de l'utilisateur au démarrage s'il y a un token
   useEffect(() => {
     const loadUser = async () => {
       if (token) {
@@ -39,13 +51,15 @@ export const AuthProvider = ({ children }) => {
           if (response.ok) {
             const data = await response.json();
             setUser(data);
-          } else {
+            try {
+              localStorage.setItem('medirdv_user', JSON.stringify(data));
+            } catch (e) {}
+          } else if (response.status === 401) {
             // Token invalide ou expiré
             logout();
           }
         } catch (error) {
-          console.error('Erreur de chargement du profil :', error);
-          logout();
+          console.error('Erreur de rafraîchissement du profil :', error);
         }
       }
       setLoading(false);
@@ -71,8 +85,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     localStorage.setItem('token', data.token);
+    try {
+      localStorage.setItem('medirdv_user', JSON.stringify(data));
+    } catch (e) {}
     setToken(data.token);
-    // Le useEffect se chargera de charger le profil de l'utilisateur
+    setUser(data);
     return data;
   };
 
@@ -93,13 +110,18 @@ export const AuthProvider = ({ children }) => {
     }
 
     localStorage.setItem('token', data.token);
+    try {
+      localStorage.setItem('medirdv_user', JSON.stringify(data));
+    } catch (e) {}
     setToken(data.token);
+    setUser(data);
     return data;
   };
 
   // Déconnexion
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('medirdv_user');
     setToken(null);
     setUser(null);
   };
@@ -116,6 +138,9 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
+        try {
+          localStorage.setItem('medirdv_user', JSON.stringify(data));
+        } catch (e) {}
       }
     } catch (err) {
       console.error('Erreur refresh user:', err);

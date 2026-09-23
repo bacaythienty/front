@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, API_URL } from '../context/AuthContext';
+import { getInitialSpecialties, getInitialDoctors, setCachedData } from '../utils/cache';
 import { 
   Search, Calendar, Heart, Eye, Baby, Smile, 
   Activity, ChevronRight, MapPin, Star, Sparkles, CheckCircle2 
@@ -14,10 +15,11 @@ const PatientHome = () => {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState('');
-  const [specialties, setSpecialties] = useState([]);
-  const [popularDoctors, setPopularDoctors] = useState([]);
+  const [specialties, setSpecialties] = useState(getInitialSpecialties);
+  const [popularDoctors, setPopularDoctors] = useState(getInitialDoctors);
   const [myAppointments, setMyAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isWarmingUp, setIsWarmingUp] = useState(false);
 
   // Mappage des icônes Lucide par leur nom
   const iconMap = {
@@ -30,40 +32,64 @@ const PatientHome = () => {
   };
 
   useEffect(() => {
+    // Avertir discrètement si le serveur Render dort et met plus de 2.5 secondes à répondre
+    const warmTimer = setTimeout(() => {
+      setIsWarmingUp(true);
+    }, 2500);
+
     const fetchData = async () => {
-      try {
-        // 1. Spécialités
-        const specRes = await fetch(`${API_URL}/specialties`);
-        const specData = await specRes.json();
-        setSpecialties(specData);
+      // 1. Spécialités en parallèle
+      const fetchSpecialties = fetch(`${API_URL}/specialties`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && Array.isArray(data) && data.length > 0) {
+            setSpecialties(data);
+            setCachedData('specialties', data);
+          }
+        })
+        .catch(() => {});
 
-        // 2. Médecins populaires (les 3 premiers)
-        const docRes = await fetch(`${API_URL}/users/doctors`);
-        const docData = await docRes.json();
-        setPopularDoctors(docData.slice(0, 3));
+      // 2. Médecins populaires en parallèle
+      const fetchDoctors = fetch(`${API_URL}/users/doctors`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && Array.isArray(data)) {
+            const top3 = data.slice(0, 3);
+            setPopularDoctors(top3);
+            setCachedData('popular_doctors', top3);
+          }
+        })
+        .catch(() => {});
 
-        // 3. Mes RDV à venir si connecté
-        if (token && user?.role === 'patient') {
-          const appRes = await fetch(`${API_URL}/appointments/my`, {
+      // 3. Mes RDV à venir en parallèle si connecté
+      const fetchAppointments = (token && user?.role === 'patient')
+        ? fetch(`${API_URL}/appointments/my`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
-          });
-          const appData = await appRes.json();
-          // Prendre les 3 prochains rendez-vous non annulés
-          const upcoming = appData
-            .filter(app => app.status !== 'cancelled' && new Date(app.date) >= new Date().setHours(0,0,0,0))
-            .slice(0, 3);
-          setMyAppointments(upcoming);
-        }
-      } catch (err) {
-        console.error('Erreur chargement données accueil:', err);
-      } finally {
-        setLoading(false);
-      }
+          })
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+              if (data && Array.isArray(data)) {
+                const upcoming = data
+                  .filter(app => app.status !== 'cancelled' && new Date(app.date) >= new Date().setHours(0,0,0,0))
+                  .slice(0, 3);
+                setMyAppointments(upcoming);
+              }
+            })
+            .catch(() => {})
+        : Promise.resolve();
+
+      // Exécution simultanée de toutes les requêtes
+      await Promise.allSettled([fetchSpecialties, fetchDoctors, fetchAppointments]);
+      clearTimeout(warmTimer);
+      setLoading(false);
+      setIsWarmingUp(false);
     };
 
     fetchData();
+
+    return () => clearTimeout(warmTimer);
   }, [token, user]);
 
   const handleSearchSubmit = (e) => {
@@ -74,17 +100,6 @@ const PatientHome = () => {
   const handleSpecialtyClick = (id) => {
     navigate(`/search?specialty=${id}`);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[70vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-medBlue-600"></div>
-          <p className="text-slate-400 text-sm font-medium">Chargement de votre espace...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-1 sm:px-4 py-6 space-y-12">
@@ -98,9 +113,17 @@ const PatientHome = () => {
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           {/* Contenu gauche */}
           <div className="md:col-span-2 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300 animate-fade-in-up">
-              <Sparkles size={14} className="animate-pulse" />
-              <span>Votre santé est notre priorité absolue</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-cyan-300 animate-fade-in-up">
+                <Sparkles size={14} className="animate-pulse" />
+                <span>Votre santé est notre priorité absolue</span>
+              </div>
+              {isWarmingUp && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-xs font-medium text-cyan-300 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
+                  <span>Synchronisation avec le serveur...</span>
+                </div>
+              )}
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-outfit tracking-tight leading-tight text-white text-left animate-fade-in-up delay-75">
@@ -199,40 +222,53 @@ const PatientHome = () => {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {popularDoctors.map((doc) => (
-                <Card
-                  key={doc._id}
-                  hoverable
-                  onClick={() => navigate(`/doctor/${doc._id}`)}
-                  className="p-4 text-left flex gap-4"
-                >
-                  <div className="relative shrink-0">
-                    <img
-                      src={doc.doctorProfile.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150"}
-                      alt={doc.name}
-                      className="w-16 h-16 rounded-xl object-cover ring-2 ring-slate-100/50 shadow-sm"
-                    />
-                    <div className="absolute -bottom-1 -right-1 bg-white rounded-md shadow-xs px-1 py-0.5 border border-slate-50 flex items-center gap-0.5">
-                      <Star className="w-2.5 h-2.5 fill-amber-400 stroke-amber-400" />
-                      <span className="text-[9px] font-bold text-slate-600">4.9</span>
+              {popularDoctors.length > 0 ? (
+                popularDoctors.map((doc) => (
+                  <Card
+                    key={doc._id}
+                    hoverable
+                    onClick={() => navigate(`/doctor/${doc._id}`)}
+                    className="p-4 text-left flex gap-4"
+                  >
+                    <div className="relative shrink-0">
+                      <img
+                        src={doc.doctorProfile?.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150"}
+                        alt={doc.name}
+                        className="w-16 h-16 rounded-xl object-cover ring-2 ring-slate-100/50 shadow-sm"
+                      />
+                      <div className="absolute -bottom-1 -right-1 bg-white rounded-md shadow-xs px-1 py-0.5 border border-slate-50 flex items-center gap-0.5">
+                        <Star className="w-2.5 h-2.5 fill-amber-400 stroke-amber-400" />
+                        <span className="text-[9px] font-bold text-slate-600">4.9</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col justify-center min-w-0">
+                      <h3 className="font-bold font-outfit text-sm text-slate-800 truncate m-0 flex items-center gap-1.5">
+                        {doc.name}
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 fill-emerald-50 shrink-0" />
+                      </h3>
+                      <p className="text-xs text-medBlue-600 font-semibold truncate mb-1">
+                        {doc.doctorProfile?.specialty?.name || 'Généraliste'}
+                      </p>
+                      <div className="flex items-center gap-1 text-[11px] text-slate-400">
+                        <MapPin size={11} className="shrink-0" />
+                        <span className="truncate">{doc.doctorProfile?.address || 'Sénégal'}</span>
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              ) : (
+                [1, 2].map((placeholder) => (
+                  <div key={placeholder} className="p-4 rounded-2xl bg-white/70 border border-slate-100/80 animate-pulse flex gap-4 shadow-xs">
+                    <div className="w-16 h-16 rounded-xl bg-slate-200/80 shrink-0" />
+                    <div className="flex-1 space-y-2.5 py-1">
+                      <div className="h-4 bg-slate-200/80 rounded w-3/4" />
+                      <div className="h-3 bg-slate-100 rounded w-1/2" />
+                      <div className="h-3 bg-slate-100 rounded w-2/3" />
                     </div>
                   </div>
-                  
-                  <div className="flex flex-col justify-center min-w-0">
-                    <h3 className="font-bold font-outfit text-sm text-slate-800 truncate m-0 flex items-center gap-1.5">
-                      {doc.name}
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 fill-emerald-50 shrink-0" />
-                    </h3>
-                    <p className="text-xs text-medBlue-600 font-semibold truncate mb-1">
-                      {doc.doctorProfile?.specialty?.name || 'Généraliste'}
-                    </p>
-                    <div className="flex items-center gap-1 text-[11px] text-slate-400">
-                      <MapPin size={11} className="shrink-0" />
-                      <span className="truncate">{doc.doctorProfile.address || 'Sénégal'}</span>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+                ))
+              )}
             </div>
           </div>
 

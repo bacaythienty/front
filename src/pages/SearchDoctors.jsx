@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../context/AuthContext';
+import { getInitialSpecialties, setCachedData } from '../utils/cache';
 import { Search, MapPin, Stethoscope, Star, Sparkles, Filter, CheckCircle2, RotateCcw } from 'lucide-react';
 import Card from '../components/Card';
 import Input from '../components/Input';
@@ -11,7 +12,7 @@ const SearchDoctors = () => {
   const navigate = useNavigate();
 
   const [doctors, setDoctors] = useState([]);
-  const [specialties, setSpecialties] = useState([]);
+  const [specialties, setSpecialties] = useState(getInitialSpecialties);
   const [loading, setLoading] = useState(true);
   
   const searchInputRef = useRef(null);
@@ -27,13 +28,18 @@ const SearchDoctors = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState(searchParams.get('specialty') || '');
   const [city, setCity] = useState(searchParams.get('city') || '');
 
-  // Charger les spécialités
+  // Charger et synchroniser les spécialités en arrière-plan
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
         const res = await fetch(`${API_URL}/specialties`);
-        const data = await res.json();
-        setSpecialties(data);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setSpecialties(data);
+            setCachedData('specialties', data);
+          }
+        }
       } catch (err) {
         console.error('Erreur:', err);
       }
@@ -175,11 +181,20 @@ const SearchDoctors = () => {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-medBlue-600"></div>
-                <p className="text-slate-400 text-xs font-medium">Recherche des praticiens...</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="p-6 rounded-3xl bg-white border border-slate-100 animate-pulse space-y-4 shadow-xs">
+                  <div className="flex gap-4">
+                    <div className="w-20 h-20 rounded-2xl bg-slate-200 shrink-0" />
+                    <div className="flex-1 space-y-2 py-1">
+                      <div className="h-5 bg-slate-200 rounded w-2/3" />
+                      <div className="h-4 bg-slate-100 rounded w-1/3" />
+                      <div className="h-3 bg-slate-100 rounded w-1/2" />
+                    </div>
+                  </div>
+                  <div className="h-10 bg-slate-100 rounded-xl" />
+                </div>
+              ))}
             </div>
           ) : doctors.length === 0 ? (
             <Card className="text-center py-20 glass-effect border-dashed border-2 border-slate-200 rounded-3xl">
